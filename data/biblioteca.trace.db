@@ -4,3 +4,21 @@ INSERT INTO clientes (nome, email, telefone, endereco, cpf) VALUES [42001-232]
 2025-12-14 17:57:22.601907-04:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CLIENTES" already exists; SQL statement:
 CREATE TABLE clientes ( id BIGINT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(100), email VARCHAR(100), telefone VARCHAR(20), endereco VARCHAR(150), cpf VARCHAR(14) ) [42101-232]
+2025-12-14 23:38:23.268836-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BIBLIOTECA" not found; SQL statement:
+INSERT INTO biblioteca (nome, endereco) VALUES ('Biblioteca Central', 'Rua Principal, 123') [42102-232]
+2025-12-14 23:45:06.269512-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BIBLIOTECA" not found; SQL statement:
+INSERT INTO biblioteca (nome, endereco) VALUES ('Biblioteca Central', 'Rua Principal, 123') [42102-232]
+2025-12-14 23:52:26.050031-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LIVRO_AUTOR" not found; SQL statement:
+INSERT INTO livro_autor (livro_id, autor_id) VALUES (1, 1) [42102-232]
+2025-12-15 00:00:00.955212-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LIVRO_AUTOR" not found; SQL statement:
+INSERT INTO livro_autor (livro_id, autor_id) VALUES (1, 1) [42102-232]
+2025-12-15 10:36:24.375918-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LIVRO_AUTOR" not found; SQL statement:
+INSERT INTO livro_autor (livro_id, autor_id) VALUES (1, 1) [42102-232]
+2025-12-15 10:53:55.190557-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LIVRO_AUTOR" not found; SQL statement:
+INSERT INTO livro_autor (livro_id, autor_id) VALUES (1, 1) [42102-232]

@@ -14,7 +14,7 @@ public class OpenApiConfig {
             .info(new Info()
                 .title("Biblioteca_EndPoint API")
                 .version("1.0")
-                .description("Criando Biblioteca com Spring Boot. Bruno e Edigleis."));
+                .description("Criando Biblioteca com Spring Boot. Devs Bruno e Edigleis."));
     }
 }
     
