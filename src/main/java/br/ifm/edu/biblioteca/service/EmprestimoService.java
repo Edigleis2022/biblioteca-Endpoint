@@ -32,7 +32,7 @@ public class EmprestimoService {
      * - Se o DTO tiver id == null → cadastro
      * - Se tiver id → edição
      */
-    public EmprestimoResponseDTO cadastrarOuEditar(EmprestimoRequestDTO dto) {
+    public EmprestimoResponseDTO cadastrarOuEditar(EmprestimoRequestDTO dto, Long id) {
 
         Emprestimo emprestimo;
 

@@ -1,9 +1,12 @@
 package br.ifm.edu.biblioteca.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * DTO para retornar os dados do usuário
+ * DTO de resposta, usado para retornar dados do usuário.
  */
 @Data
 @NoArgsConstructor
@@ -11,7 +14,7 @@ import lombok.*;
 @Builder
 public class UsuarioResponseDTO {
 
-    private Long id;      // ID do usuário
-    private String nome;  // Nome do usuário
+    private Long id;     // ID do usuário
+    private String nome; // Nome do usuário
     private String email; // Email do usuário
 }

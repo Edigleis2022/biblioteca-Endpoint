@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import br.ifm.edu.biblioteca.dto.EmprestimoRequestDTO;
 import br.ifm.edu.biblioteca.dto.EmprestimoResponseDTO;
 import br.ifm.edu.biblioteca.service.EmprestimoService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody; // CORRETO
 import jakarta.validation.Valid;
 
 /**
@@ -34,19 +35,17 @@ public class EmprestimoController {
      * - Se não tiver id → cadastro
      */
     @PutMapping
-    public ResponseEntity<?> cadastrarOuEditar(
-            @Valid @RequestBody EmprestimoRequestDTO dto) {
-
-        try {
-            EmprestimoResponseDTO resp = service.cadastrarOuEditar(dto);
-            return ResponseEntity.ok(resp);
-
-        } catch (RuntimeException e) {
-            Map<String, String> erro = new HashMap<>();
-            erro.put("erro", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
-        }
+public ResponseEntity<?> cadastrarOuEditar(@Valid @RequestBody EmprestimoRequestDTO dto,
+                                            @RequestParam(required = false) Long id) {
+    try {
+        EmprestimoResponseDTO resp = service.cadastrarOuEditar(dto, id);
+        return ResponseEntity.ok(resp);
+    } catch (RuntimeException e) {
+        Map<String, String> erro = new HashMap<>();
+        erro.put("erro", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
+}
 
     /**
      * Endpoint para listar todos os empréstimos.

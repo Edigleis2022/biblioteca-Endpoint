@@ -2,10 +2,13 @@ package br.ifm.edu.biblioteca.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * DTO para cadastro ou edição de usuário
+ * DTO para requisições de cadastro ou edição de usuário.
  */
 @Data
 @NoArgsConstructor
@@ -13,23 +16,12 @@ import lombok.*;
 @Builder
 public class UsuarioRequestDTO {
 
-    /**
-     * ID do usuário
-     * - null → cadastro
-     * - preenchido → edição
-     */
-    private Long id;
+    private Long id; // Opcional: usado apenas para edição
 
-    /**
-     * Nome do usuário
-     */
     @NotBlank(message = "O nome do usuário é obrigatório")
-    private String nome;
+    private String nome; // Nome do usuário
 
-    /**
-     * Email do usuário
-     */
     @NotBlank(message = "O email do usuário é obrigatório")
     @Email(message = "O email informado não é válido")
-    private String email;
+    private String email; // Email do usuário
 }

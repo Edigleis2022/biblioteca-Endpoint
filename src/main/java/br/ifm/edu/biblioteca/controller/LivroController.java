@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import br.ifm.edu.biblioteca.dto.LivroRequestDTO;
 import br.ifm.edu.biblioteca.dto.LivroResponseDTO;
 import br.ifm.edu.biblioteca.service.LivroService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 /**
@@ -34,19 +35,17 @@ public class LivroController {
      * - Se não tiver id → cadastro
      */
     @PutMapping
-    public ResponseEntity<?> cadastrarOuEditar(
-            @Valid @RequestBody LivroRequestDTO dto) {
-
-        try {
-            LivroResponseDTO resp = service.cadastrarOuEditar(dto);
-            return ResponseEntity.ok(resp);
-
-        } catch (RuntimeException e) {
-            Map<String, String> erro = new HashMap<>();
-            erro.put("erro", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
-        }
+public ResponseEntity<?> cadastrarOuEditar(@Valid @RequestBody LivroRequestDTO dto,
+                                            @RequestParam(required = false) Long id) {
+    try {
+        LivroResponseDTO resp = service.cadastrarOuEditar(dto, id);
+        return ResponseEntity.ok(resp);
+    } catch (RuntimeException e) {
+        Map<String, String> erro = new HashMap<>();
+        erro.put("erro", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
+}
 
     /**
      * Endpoint para listar todos os livros.

@@ -30,7 +30,7 @@ public class LivroService {
      * - Se o DTO tiver id == null → cadastro
      * - Se tiver id → edição
      */
-    public LivroResponseDTO cadastrarOuEditar(LivroRequestDTO dto) {
+    public LivroResponseDTO cadastrarOuEditar(LivroRequestDTO dto, Long id) {
         Livro livro;
 
         if (dto.getId() != null) {

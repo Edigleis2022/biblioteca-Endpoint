@@ -4,44 +4,49 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import br.ifm.edu.biblioteca.dto.UsuarioDTO;
 import br.ifm.edu.biblioteca.dto.UsuarioRequestDTO;
 import br.ifm.edu.biblioteca.dto.UsuarioResponseDTO;
 import br.ifm.edu.biblioteca.model.Usuario;
 import br.ifm.edu.biblioteca.repository.UsuarioRepository;
 
-@Service // Indica que essa classe contém regras de negócio
+/**
+ * Service que contém a lógica de negócio para a entidade Usuario.
+ */
+@Service
 public class UsuarioService {
 
-    @Autowired private UsuarioRepository repository;
+    @Autowired
+    private UsuarioRepository repository; // Acesso ao banco de dados
 
     /**
-     * Método para cadastrar ou editar um Usuário.
-     * - Se o DTO tiver id == null → cadastro.
-     * - Se tiver id → edição.
+     * Método para cadastrar ou editar um usuário.
+     * - Se dto.id == null → cria novo usuário
+     * - Se dto.id != null → edita usuário existente
+     *
+     * @param dto Dados do usuário
+     * @return UsuarioResponseDTO com os dados salvos/atualizados
      */
-    public UsuarioResponseDTO cadastrarOuEditar(UsuarioRequestDTO dto, Long id) {
-        Usuario usuario;
+    public UsuarioResponseDTO cadastrarOuEditar(UsuarioRequestDTO dto) {
+        Usuario u;
 
         if (dto.getId() != null) {
-            // Caso tenha ID, significa edição
-            usuario = repository.findById(dto.getId())
+            // Edição
+            u = repository.findById(dto.getId())
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado para edição"));
-            usuario.setNome(dto.getNome());   // Atualiza nome
-            usuario.setEmail(dto.getEmail()); // Atualiza email
+
+            u.setNome(dto.getNome());
+            u.setEmail(dto.getEmail());
         } else {
-            // Caso não tenha ID, significa cadastro
-            usuario = Usuario.builder()
+            // Cadastro
+            u = Usuario.builder()
                     .nome(dto.getNome())
                     .email(dto.getEmail())
                     .build();
         }
 
-        // Salva no banco
-        Usuario salvo = repository.save(usuario);
+        Usuario salvo = repository.save(u); // Salva no banco
 
-        // Retorna o DTO de resposta com os dados atualizados
+        // Retorna DTO de resposta
         return UsuarioResponseDTO.builder()
                 .id(salvo.getId())
                 .nome(salvo.getNome())
@@ -49,7 +54,11 @@ public class UsuarioService {
                 .build();
     }
 
-    // Método para listar todos os usuários cadastrados
+    /**
+     * Lista todos os usuários cadastrados
+     *
+     * @return Lista de UsuarioResponseDTO
+     */
     public List<UsuarioResponseDTO> listarTodos() {
         return repository.findAll().stream()
                 .map(u -> UsuarioResponseDTO.builder()
@@ -60,14 +69,20 @@ public class UsuarioService {
                 .toList();
     }
 
-    // Método para buscar um usuário específico pelo ID
+    /**
+     * Busca um usuário pelo ID
+     *
+     * @param id ID do usuário
+     * @return UsuarioResponseDTO com os dados encontrados
+     */
     public UsuarioResponseDTO buscarPorId(Long id) {
-        Usuario usuario = repository.findById(id)
+        Usuario u = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
         return UsuarioResponseDTO.builder()
-                .id(usuario.getId())
-                .nome(usuario.getNome())
-                .email(usuario.getEmail())
+                .id(u.getId())
+                .nome(u.getNome())
+                .email(u.getEmail())
                 .build();
     }
 }
