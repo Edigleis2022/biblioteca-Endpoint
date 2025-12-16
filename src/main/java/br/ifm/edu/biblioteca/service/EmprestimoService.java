@@ -18,88 +18,86 @@ import br.ifm.edu.biblioteca.repository.UsuarioRepository;
 @Service // Indica que essa classe contém regras de negócio
 public class EmprestimoService {
 
-    @Autowired private EmprestimoRepository repository;
-    @Autowired private LivroRepository livroRepository;
-    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired
+    private EmprestimoRepository repository;
+
+    @Autowired
+    private LivroRepository livroRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     /**
      * Método para cadastrar ou editar um Empréstimo.
-     * - Se o DTO tiver id == null → cadastro.
-     * - Se tiver id → edição.
+     * - Se o DTO tiver id == null → cadastro
+     * - Se tiver id → edição
      */
     public EmprestimoResponseDTO cadastrarOuEditar(EmprestimoRequestDTO dto) {
+
         Emprestimo emprestimo;
 
         if (dto.getId() != null) {
-            // Caso tenha ID, significa edição
+            // EDIÇÃO
             emprestimo = repository.findById(dto.getId())
                     .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado para edição"));
 
-            // Atualiza datas
             emprestimo.setDataEmprestimo(dto.getDataEmprestimo());
             emprestimo.setDataDevolucao(dto.getDataDevolucao());
 
-            // Atualiza livro vinculado
-            Livro livro = livroRepository.findById(dto.getLivroId())
-                    .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
-            emprestimo.setLivro(livro);
-
-            // Atualiza usuário vinculado
-            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-            emprestimo.setUsuario(usuario);
-
         } else {
-            // Caso não tenha ID, significa cadastro
-            Livro livro = livroRepository.findById(dto.getLivroId())
-                    .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
-            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            // CADASTRO
+            emprestimo = new Emprestimo();
+            emprestimo.setDataEmprestimo(dto.getDataEmprestimo());
+            emprestimo.setDataDevolucao(dto.getDataDevolucao());
 
-            emprestimo = Emprestimo.builder()
-                    .dataEmprestimo(dto.getDataEmprestimo())
-                    .dataDevolucao(dto.getDataDevolucao())
-                    .livro(livro)
-                    .usuario(usuario)
-                    .build();
+            // (Opcional) regra de negócio:
+            // impedir empréstimo duplicado do mesmo livro
+            /*
+            if (repository.existsByLivroIdAndDataDevolucaoIsNull(dto.getLivroId())) {
+                throw new RuntimeException("Este livro já está emprestado");
+            }
+            */
         }
+
+        // Livro (obrigatório)
+        Livro livro = livroRepository.findById(dto.getLivroId())
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+        emprestimo.setLivro(livro);
+
+        // Usuário (obrigatório)
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        emprestimo.setUsuario(usuario);
 
         // Salva no banco
         Emprestimo salvo = repository.save(emprestimo);
 
-        // Retorna o DTO de resposta com os dados atualizados
-        return EmprestimoResponseDTO.builder()
-                .id(salvo.getId())
-                .dataEmprestimo(salvo.getDataEmprestimo())
-                .dataDevolucao(salvo.getDataDevolucao())
-                .livroId(salvo.getLivro().getId())
-                .usuarioId(salvo.getUsuario().getId())
-                .build();
+        // Retorna DTO
+        return toResponseDTO(salvo);
     }
 
-    // Método para listar todos os empréstimos cadastrados
+    // Lista todos os empréstimos
     public List<EmprestimoResponseDTO> listarTodos() {
         return repository.findAll().stream()
-                .map(e -> EmprestimoResponseDTO.builder()
-                        .id(e.getId())
-                        .dataEmprestimo(e.getDataEmprestimo())
-                        .dataDevolucao(e.getDataDevolucao())
-                        .livroId(e.getLivro().getId())
-                        .usuarioId(e.getUsuario().getId())
-                        .build())
+                .map(this::toResponseDTO)
                 .toList();
     }
 
-    // Método para buscar um empréstimo específico pelo ID
+    // Busca empréstimo por ID
     public EmprestimoResponseDTO buscarPorId(Long id) {
         Emprestimo emprestimo = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
+        return toResponseDTO(emprestimo);
+    }
+
+    // Método auxiliar para padronizar o retorno
+    private EmprestimoResponseDTO toResponseDTO(Emprestimo e) {
         return EmprestimoResponseDTO.builder()
-                .id(emprestimo.getId())
-                .dataEmprestimo(emprestimo.getDataEmprestimo())
-                .dataDevolucao(emprestimo.getDataDevolucao())
-                .livroId(emprestimo.getLivro().getId())
-                .usuarioId(emprestimo.getUsuario().getId())
+                .id(e.getId())
+                .dataEmprestimo(e.getDataEmprestimo())
+                .dataDevolucao(e.getDataDevolucao())
+                .livroId(e.getLivro().getId())
+                .usuarioId(e.getUsuario().getId())
                 .build();
     }
 }

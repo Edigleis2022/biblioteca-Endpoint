@@ -21,7 +21,7 @@ public class BibliotecaService {
      * - Se o DTO tiver id == null → cadastro.
      * - Se tiver id → edição.
      */
-    public BibliotecaResponseDTO cadastrarOuEditar(BibliotecaRequestDTO dto) {
+    public BibliotecaResponseDTO cadastrarOuEditar(BibliotecaRequestDTO dto, Long id) {
         Biblioteca biblioteca;
 
         if (dto.getId() != null) {

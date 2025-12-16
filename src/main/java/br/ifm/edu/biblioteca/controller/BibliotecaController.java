@@ -12,44 +12,53 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ifm.edu.biblioteca.dto.BibliotecaRequestDTO;
 import br.ifm.edu.biblioteca.dto.BibliotecaResponseDTO;
 import br.ifm.edu.biblioteca.service.BibliotecaService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 
-@RestController // Indica que essa classe expõe endpoints REST
-@RequestMapping("/bibliotecas") // Define o caminho base dos endpoints: /bibliotecas
+@RestController
+@RequestMapping("/bibliotecas")
 public class BibliotecaController {
 
-    @Autowired // Injeta automaticamente o BibliotecaService
+    @Autowired
     private BibliotecaService service;
 
-    @PutMapping // Endpoint para cadastrar ou editar Biblioteca
-    public ResponseEntity<?> cadastrarOuEditar(@RequestBody BibliotecaRequestDTO dto) {
+    // Cadastrar ou editar
+    @PutMapping
+    public ResponseEntity<?> cadastrarOuEditar(@Valid @RequestBody BibliotecaRequestDTO dto,
+                                                @RequestParam(required = false) Long id) {
         try {
-            // Chama o service para cadastrar ou editar a biblioteca
-            BibliotecaResponseDTO response = service.cadastrarOuEditar(dto);
-
-            // Retorna 200 OK com o JSON da biblioteca atualizada
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            // Caso ocorra erro, retorna 400 BAD REQUEST com mensagem detalhada
+            BibliotecaResponseDTO resp = service.cadastrarOuEditar(dto, id);
+            return ResponseEntity.ok(resp);
+        } catch (RuntimeException e) {
             Map<String, String> erro = new HashMap<>();
             erro.put("erro", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
         }
     }
 
-    @GetMapping // Endpoint para listar todas as bibliotecas cadastradas
+    // Listar todos
+    @GetMapping
     public ResponseEntity<List<BibliotecaResponseDTO>> listarTodos() {
         return ResponseEntity.ok(service.listarTodos());
     }
 
-    @GetMapping("/{id}") // Endpoint para buscar uma biblioteca específica pelo ID
-    public ResponseEntity<BibliotecaResponseDTO> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    // Buscar por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+        try {
+            BibliotecaResponseDTO resp = service.buscarPorId(id);
+            return ResponseEntity.ok(resp);
+        } catch (RuntimeException e) {
+            Map<String, String> erro = new HashMap<>();
+            erro.put("erro", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+        }
     }
 }
 

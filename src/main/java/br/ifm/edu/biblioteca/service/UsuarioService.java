@@ -21,7 +21,7 @@ public class UsuarioService {
      * - Se o DTO tiver id == null → cadastro.
      * - Se tiver id → edição.
      */
-    public UsuarioResponseDTO cadastrarOuEditar(UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO cadastrarOuEditar(UsuarioRequestDTO dto, Long id) {
         Usuario usuario;
 
         if (dto.getId() != null) {
