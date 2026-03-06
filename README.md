@@ -16,7 +16,7 @@ Validações de campos obrigatórios (@Valid, @NotBlank, @NotNull)
 Swagger integrado para testes rápidos
 
 Este projeto demonstra habilidades em Java, Spring Boot, JPA/Hibernate, DTOs, serviços, validação e arquitetura REST.
-
+```
 🔹 Tabela de Endpoints
 Entidade	Método	Endpoint	Descrição
 Biblioteca	GET	/bibliotecas	Listar todas
@@ -35,7 +35,7 @@ Empréstimo	GET	/emprestimos	Listar todos
 	GET	/emprestimos/{id}	Buscar por ID
 	PUT	/emprestimos	Cadastrar/Editar
 🔹 GIFs de Demonstração
-
+```
 Biblioteca
 
 
@@ -102,7 +102,7 @@ Swagger / OpenAPI
 DTOs e Services para separação de camadas
 
 Validação de dados (@Valid, @NotBlank, @NotNull)
-
+```
 🔹 Estrutura do Projeto
 src/main/java/br/ifm/edu/biblioteca
 │
@@ -111,7 +111,7 @@ src/main/java/br/ifm/edu/biblioteca
 ├── dto                 # Data Transfer Objects (requests/responses)
 ├── model               # Entidades JPA
 └── repository          # Interfaces de persistência
-
+```
 🔹 Instalação e Testes
 
 Clone o repositório:
